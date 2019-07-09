@@ -1,0 +1,28 @@
+{
+  "name": "homework-3-patterns",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ https://github.com/KostiantynDobrutskyi/Homework_3_Patterns.git"
+
+  },
+  "author": "Kostiantyn Dobrutskyi",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^1.19.1",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "socket.io": "^2.2.0"
+  },
+  "bugs": {
+    "url": " https://github.com/KostiantynDobrutskyi/Homework_3_Patterns.git"
+  },
+  "homepage": " https://github.com/KostiantynDobrutskyi/Homework_3_Patterns.git"
+}

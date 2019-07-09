@@ -1,0 +1,22 @@
+[
+  {
+    "login": "Pupkin",
+    "password": "1111"
+  },
+  {
+    "login": "SomeoneElse",
+    "password": "qwerty"
+  },
+  {
+    "login": "player1",
+    "password": "1111"
+  },
+  {
+    "login": "player2",
+    "password": "2222"
+  },
+  {
+    "login": "player3",
+    "password": "3333"
+  }
+]

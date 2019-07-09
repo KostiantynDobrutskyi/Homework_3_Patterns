@@ -1,0 +1,151 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+    font-family: sans-serif;
+    height: 100%;
+}
+
+/**************************************************************************************
+************************************Styling login form*********************************
+**************************************************************************************/
+
+.wrapper-auth {
+    height: 100%;
+    background: #34495e;
+    position: relative;
+}
+
+.auth-form {
+    position: absolute;
+    width: 400px;
+    height: 200px;
+    background: #191919;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+
+}
+
+#auth-login:focus, #auth-pswd:focus {
+    border-color: #2ecc71;
+    width: 70%;
+}
+
+#auth-login,
+#auth-pswd,
+#auth-btn {
+    display: block;
+    margin: 30px auto;
+    width: 50%;
+    height: 30px;
+    border-radius: 15px;
+    text-align: center;
+    background: none;
+    border: 2px solid #3498db;
+    color: white;
+    outline: none;
+    transition: .3s;
+}
+
+#auth-btn {
+    width: 30%;
+    border-color: #2ecc71;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+#auth-btn:hover {
+    background: #2ecc71;
+}
+
+/**************************************************************************************
+************************************Styling race***************************************
+**************************************************************************************/
+
+.wrapper-race{
+    height: 100%;
+
+}
+.users-race-list{
+    position: absolute;
+    top: 2%;
+    left: 2%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 20%;
+    overflow: auto;
+    height: 45%;
+    border: 1px solid #333;
+}
+.user-race-item{
+    margin: 8px 5px;
+    min-width: 120px;
+    overflow: auto;
+}
+.user-race-name{
+    display: block;
+
+
+}
+
+
+
+progress {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    height: 20px;
+    border-radius: 10px;
+
+}
+
+.wrapper-text-race{
+    position: absolute;
+    top: 2%;
+    left:25%;
+    right:2%;
+    font-size: 24px;
+    margin: 0 auto;
+    height: 45%;
+    overflow: auto;
+    text-align: justify;
+}
+
+.text-race-progress{
+    color: green;
+    float:left;
+
+}
+
+.text-race{
+    display: inline-block;
+    white-space: pre-wrap;
+}
+.text-race::first-letter{
+    color:red;
+
+}
+
+
+
+.wrapper-text-area{
+    position: absolute;
+    height: 45%;
+    bottom: 2%;
+    left: 2%;
+    right: 2%;
+
+}
+
+#race-player-answer{
+    width: 100%;
+    height: 100%;
+    font-size: 20px;
+}
