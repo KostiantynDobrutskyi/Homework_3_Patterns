@@ -9,8 +9,10 @@ const bodyParser = require('body-parser');
 const users = require('./users.json');
 const texts = require('./text.json');
 
-let clients = [];
+let clients = {};
 let userMessage = "";
+let counter = 10;
+let counterRaceTime = 120;
 
 require('./passport.config');
 
@@ -40,54 +42,93 @@ app.post('/', function (req, res) {
 });
 
 
-io.sockets.on('connect', function (client) {
-    if (clients.indexOf(client.id)) {
-        clients.push(client.id)
+io.sockets.on('connect', client => {
+
+    if (!clients[client.id]) {
+        clients[client.id] = {
+            id: client.id,
+            name: "usrs",
+            progress: 0,
+        }
     }
-    console.log("clients:", clients);
-    console.log("length:", clients.length);
+
+    waitingRace(clients);
+
     client.on("jwtPush", tokenJwt => {
         const {token} = tokenJwt;
-        const userLogin = jwt.decode(token).login;
-        console.log(userLogin);
-        client.broadcast.emit("newPlayer", userLogin);
-        client.emit("newPlayer", {name: userLogin, id: client.id});
+        clients[client.id].name = jwt.decode(token).login;
+        client.emit("newPlayer", clients);
+        client.broadcast.emit("newPlayer", clients);
     });
 
 
-    client.on('disconnect', function () {
-        clients.splice(clients.indexOf(client.id), 1);
-        console.log("client disconnect:", client.id);
-        console.log("client disconnect length:", clients.length);
-    });
-});
-
-
-io.on('connection', socket => {
-    socket.on('userAnswer', payload => {
+    client.on('userAnswer', payload => {
 
         const {message, messageSvr} = payload;
         userMessage = message;
-        if (texts[0].text.indexOf(userMessage) === 0) {
-            socket.emit("renderTextProgress", {message, messageSvr: texts[0].text.replace(message, '')});
-            console.log("true");
-        } else {
-            console.log("false")
+        let serverText = texts[0].text;
+        if (serverText.indexOf(userMessage) === 0) {
+            client.emit("renderTextProgress", {message, messageSvr: serverText.replace(message, '')});
+            clients[client.id].progress = (userMessage.length / serverText.length) * 100;
+            client.emit("newPlayer", clients);
+            client.broadcast.emit("newPlayer", clients);
         }
     });
 
-    socket.emit("textRace", texts[0].text)
+
+    client.on('disconnect', () => {
+        delete clients[client.id];
+    });
 });
 
 
-// io.on('connection', socket => {
-//     socket.on('submitMessage', payload => {
-//         const { message, token } = payload;
-//         const userLogin = jwt.decode(token).login;
-//         socket.broadcast.emit('newMessage', { message, user: userLogin });
-//         socket.emit('newMessage', { message, user: userLogin });
-//     });
-// });
+function waitingRace(clients) {
+    if (Object.keys(clients).length === 1) {
+
+        io.sockets.emit('waitingRace', "Очікується ще 1 гравець");
+
+    } else if (Object.keys(clients).length >= 2) {
+        let countdown = setInterval(() => {
+            if (counter > 0) {
+                io.sockets.emit('waitingRace', `Гонка розпочнеться через ${counter}`);
+                counter--;
+            }
+            if (counter === 0) {
+                io.sockets.emit('waitingRace', texts[0].text);
+                startRace();
+                clearInterval(countdown);
+            }
+            if (counter < 0) {
+                clearInterval(countdown);
+
+            }
+        }, 1000);
+    }
+}
+
+function startRace() {
+    let countdown = setInterval(() => {
+        if (counterRaceTime > 0) {
+            let minute = Math.floor(counterRaceTime / 60);
+            let second = counterRaceTime - minute * 60;
+            io.sockets.emit('endRace', `until the end ${minute}m ${second}s`);
+            counterRaceTime--;
+        }
+        if (counterRaceTime === 0) {
+            io.sockets.emit('waitingRace', "Кінець заїзду");
+            clearInterval(countdown);
+
+        }
+
+        if(counterRaceTime<0){
+            counterRaceTime = 0;
+        }
+    }, 1000);
+}
+
+
+
+
 
 
 

@@ -50,6 +50,7 @@ html, body {
     color: white;
     outline: none;
     transition: .3s;
+    -moz-transition: .3s;
 }
 
 #auth-btn {
@@ -102,7 +103,6 @@ progress {
     -moz-appearance: none;
     width: 100%;
     height: 20px;
-    border-radius: 10px;
 
 }
 
@@ -133,13 +133,84 @@ progress {
 
 }
 
+.wrapper-other-info{
+    position: absolute;
+    height: 45%;
+    bottom: 2%;
+    left: 2%;
+    right: 78%;
+    overflow: auto;
+}
+.timer-end-race{
+    position: absolute;
+    top: 2%;
+    left: 0;
+    width: 100%;
+    height:20%;
+    text-align: center;
+    background: #2ecc71;
+    overflow: auto;
+    padding-top:20px;
+
+
+}
+
+.bot-container{
+    position: absolute;
+    bottom: 2%;
+    width: 100%;
+    left:0;
+    right: 0;
+    height: 74%;
+}
+
+.bot-message{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-radius: 5%;
+    background: #999;
+    height: 50%;
+    text-align: justify;
+}
+
+.bot-message:after{
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    top: 100%;
+    right: 20%;
+
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 20px solid #999;
+}
+
+.bot-message-info{
+    padding: 2%;
+    height: 100%;
+    overflow: auto;
+}
+
+.bot-img{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    max-height: 50%;
+    max-width: 50%;
+    height: auto;
+    width: auto;
+}
+
 
 
 .wrapper-text-area{
     position: absolute;
     height: 45%;
     bottom: 2%;
-    left: 2%;
+    left: 25%;
     right: 2%;
 
 }
