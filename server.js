@@ -8,11 +8,13 @@ const passport = require('passport');
 const bodyParser = require('body-parser');
 const users = require('./users.json');
 const texts = require('./text.json');
+const BotRace = require('./bot');
 
 let clients = {};
 let userMessage = "";
 let counter = 10;
-let counterRaceTime = 120;
+let counterRaceTime = 180;
+let bot = new BotRace();
 
 require('./passport.config');
 
@@ -23,11 +25,11 @@ app.use(passport.initialize());
 app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, 'login.html'));
+    res.sendFile(path.join(__dirname, 'public/login.html'));
 });
 
 app.get('/race', /*passport.authenticate('jwt'),*/ function (req, res) {
-    res.sendFile(path.join(__dirname, 'race.html'));
+    res.sendFile(path.join(__dirname, 'public/race.html'));
 });
 
 app.post('/', function (req, res) {
@@ -42,6 +44,7 @@ app.post('/', function (req, res) {
 });
 
 
+
 io.sockets.on('connect', client => {
 
     if (!clients[client.id]) {
@@ -52,18 +55,32 @@ io.sockets.on('connect', client => {
         }
     }
 
-    waitingRace(clients);
+    if(Object.keys(clients).length>=1){
+
+        waitingRace(clients);
+        message = bot.create("salute");
+        io.sockets.emit('botMessage', message.say());
+
+    }
+
+
 
     client.on("jwtPush", tokenJwt => {
         const {token} = tokenJwt;
         clients[client.id].name = jwt.decode(token).login;
         client.emit("newPlayer", clients);
         client.broadcast.emit("newPlayer", clients);
+
+        if(Object.keys(clients).length>=2){
+
+            message = bot.create('getriders', clients);
+            io.sockets.emit('botMessage', message.say());
+        }
+
     });
 
 
     client.on('userAnswer', payload => {
-
         const {message, messageSvr} = payload;
         userMessage = message;
         let serverText = texts[0].text;
@@ -95,8 +112,10 @@ function waitingRace(clients) {
             }
             if (counter === 0) {
                 io.sockets.emit('waitingRace', texts[0].text);
-                startRace();
+                startRace(clients);
+                counter = 10;
                 clearInterval(countdown);
+
             }
             if (counter < 0) {
                 clearInterval(countdown);
@@ -106,7 +125,7 @@ function waitingRace(clients) {
     }
 }
 
-function startRace() {
+function startRace(clients) {
     let countdown = setInterval(() => {
         if (counterRaceTime > 0) {
             let minute = Math.floor(counterRaceTime / 60);
@@ -116,12 +135,38 @@ function startRace() {
         }
         if (counterRaceTime === 0) {
             io.sockets.emit('waitingRace', "Кінець заїзду");
+            message = bot.create('getwinners', clients);
+            io.sockets.emit('botMessage', message.say());
             clearInterval(countdown);
-
         }
 
         if(counterRaceTime<0){
             counterRaceTime = 0;
+        }
+
+        if(counterRaceTime===150){
+            message = bot.create('process', clients,counterRaceTime);
+            io.sockets.emit('botMessage', message.say());
+        }
+
+        if(counterRaceTime===120){
+            message = bot.create('process', clients,counterRaceTime);
+            io.sockets.emit('botMessage', message.say());
+        }
+
+        if(counterRaceTime===90){
+            message = bot.create('process', clients,counterRaceTime);
+            io.sockets.emit('botMessage', message.say());
+        }
+
+        if(counterRaceTime===60){
+            message = bot.create('process', clients,counterRaceTime);
+            io.sockets.emit('botMessage', message.say());
+        }
+
+        if(counterRaceTime===30){
+            message = bot.create('process', clients,counterRaceTime);
+            io.sockets.emit('botMessage', message.say());
         }
     }, 1000);
 }

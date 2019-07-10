@@ -9,6 +9,7 @@ window.onload = () => {
         const textRace = document.querySelector(".text-race");
         const playersList = document.querySelector(".users-race-list");
         const timerEnd = document.querySelector(".timer-end-race");
+        const botMessage = document.querySelector(".bot-message-info");
 
 
         socket.emit('jwtPush', {token: jwt});
@@ -59,6 +60,12 @@ window.onload = () => {
         socket.on("endRace", counter => {
             timerEnd.innerHTML = counter;
         })
+
+        socket.on("botMessage", message => {
+            botMessage.innerHTML = message;
+        })
+
+
 
     }
 
