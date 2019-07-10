@@ -44,7 +44,6 @@ app.post('/', function (req, res) {
 });
 
 
-
 io.sockets.on('connect', client => {
 
     if (!clients[client.id]) {
@@ -55,7 +54,7 @@ io.sockets.on('connect', client => {
         }
     }
 
-    if(Object.keys(clients).length>=1){
+    if (Object.keys(clients).length >= 1) {
 
         waitingRace(clients);
         message = bot.create("salute");
@@ -64,14 +63,13 @@ io.sockets.on('connect', client => {
     }
 
 
-
     client.on("jwtPush", tokenJwt => {
         const {token} = tokenJwt;
         clients[client.id].name = jwt.decode(token).login;
         client.emit("newPlayer", clients);
         client.broadcast.emit("newPlayer", clients);
 
-        if(Object.keys(clients).length>=2){
+        if (Object.keys(clients).length >= 2) {
 
             message = bot.create('getriders', clients);
             io.sockets.emit('botMessage', message.say());
@@ -140,34 +138,16 @@ function startRace(clients) {
             clearInterval(countdown);
         }
 
-        if(counterRaceTime<0){
+        if (counterRaceTime < 0) {
             counterRaceTime = 0;
         }
 
-        if(counterRaceTime===150){
-            message = bot.create('process', clients,counterRaceTime);
+        if (counterRaceTime === 150 || counterRaceTime === 120 || counterRaceTime === 90 || counterRaceTime === 60 || counterRaceTime === 30) {
+            message = bot.create('process', clients, counterRaceTime);
             io.sockets.emit('botMessage', message.say());
         }
 
-        if(counterRaceTime===120){
-            message = bot.create('process', clients,counterRaceTime);
-            io.sockets.emit('botMessage', message.say());
-        }
 
-        if(counterRaceTime===90){
-            message = bot.create('process', clients,counterRaceTime);
-            io.sockets.emit('botMessage', message.say());
-        }
-
-        if(counterRaceTime===60){
-            message = bot.create('process', clients,counterRaceTime);
-            io.sockets.emit('botMessage', message.say());
-        }
-
-        if(counterRaceTime===30){
-            message = bot.create('process', clients,counterRaceTime);
-            io.sockets.emit('botMessage', message.say());
-        }
     }, 1000);
 }
 
